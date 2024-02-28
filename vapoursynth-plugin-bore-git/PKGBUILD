@@ -1,0 +1,41 @@
+# Maintainer: DepriSheep
+
+_plug=bore
+pkgname=vapoursynth-plugin-${_plug}-git
+pkgver=0.1.1.0.g6e39773
+pkgrel=1
+pkgdesc="Compile bore library for Vapoursynth usage (GIT version)"
+arch=('x86_64')
+url='https://github.com/OpusGang/bore'
+license=('MIT')
+depends=('vapoursynth')
+makedepends=('git' 'meson')
+provides=(${pkgname%-*})
+source=("${_plug}"::"git+https://github.com/OpusGang/${_plug}.git")
+sha256sums=('SKIP')
+options=('debug')
+
+pkgver() {
+  cd $_plug
+  echo "$(git describe --long --tags | tr - . | tr -d v)"
+}
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  arch-meson "../$_plug" \
+    --buildtype=release \
+    --libdir /usr/lib/vapoursynth
+
+  ninja
+}
+
+package() {
+  DESTDIR="${pkgdir}" ninja -C build install
+  
+  install -Dm644 "${_plug}/README.md" "${pkgdir}/usr/share/doc/vapoursynth/plugins/${_plug}/README.md"
+  install -Dm644 "${_plug}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

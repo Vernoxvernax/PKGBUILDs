@@ -1,0 +1,56 @@
+# Maintainer: DepriSheep
+
+pkgname=wobbly-git
+pkgver=6.rc2.28.g9da5579
+pkgrel=1
+pkgdesc="IVTC assistant for VapourSynth, similar to Yatta. (GIT version)"
+arch=('x86_64')
+url='https://github.com/Jaded-Encoding-Thaumaturgy/Wobbly'
+license=('GPL')
+depends=('qt5-base'
+         'vapoursynth-plugin-scxvid'
+         'vapoursynth-plugin-fieldhint'
+         'vapoursynth-plugin-d2vsource'
+         'vapoursynth-plugin-lsmashsource'
+         'xdg-utils'
+)
+makedepends=('git')
+provides=(${pkgname%-*})
+conflicts=(${pkgname%-*})
+source=("${pkgname%-*}"::"git+https://github.com/Jaded-Encoding-Thaumaturgy/Wobbly.git"
+        "wobbly.desktop"
+        "wibbly.desktop"
+)
+sha256sums=('SKIP'
+            '8dcaf8a1bf264573ecba9499af04183648b6a585b6ff495a158ebb58bfcb4e32'
+            '0b69cf647f00c1e8378c2aa45297cc08dd08af77702a4ea429290086c17729ec'
+)
+options=('debug')
+
+pkgver() {
+  cd "${pkgname%-*}"
+  echo "$(git describe --long --tags | tr - . | tr -d v)"
+}
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd "${pkgname%-*}"
+  ./autogen.sh
+
+  cd "${srcdir}/build"
+  ../"${pkgname%-*}"/configure \
+    --prefix=/usr
+
+  make
+}
+
+package() {
+  make -C build DESTDIR="${pkgdir}" install
+
+  install -Dm644 wobbly.desktop "${pkgdir}/usr/share/applications/wobbly.desktop"
+  install -Dm644 wibbly.desktop "${pkgdir}/usr/share/applications/wibbly.desktop"
+}
+

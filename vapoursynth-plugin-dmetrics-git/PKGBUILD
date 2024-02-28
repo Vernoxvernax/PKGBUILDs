@@ -1,0 +1,39 @@
+# Maintainer: DepriSheep
+
+_plug=dmetrics
+pkgname=vapoursynth-plugin-${_plug}-git
+pkgver=R1.0.ge64bc47
+pkgrel=1
+pkgdesc="Generate dmetrics for Vapoursynth usage (GIT version)"
+arch=('x86_64')
+url='https://github.com/vapoursynth/dmetrics'
+license=('GPL-2.0')
+depends=('vapoursynth')
+makedepends=('git' 'meson')
+provides=(${pkgname%-*})
+source=("${_plug}"::"git+https://github.com/vapoursynth/dmetrics.git")
+sha256sums=('SKIP')
+options=('debug')
+
+pkgver() {
+  cd $_plug
+  echo "$(git describe --long --tags | tr - . | tr -d v)"
+}
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cp ../meson.build "$_plug"/.
+  cd build
+  arch-meson "../$_plug" --libdir /usr/lib/vapoursynth
+  ninja
+}
+
+package() {
+  DESTDIR="${pkgdir}" ninja -C build install
+  
+  install -Dm644 "${_plug}/README.md" "${pkgdir}/usr/share/doc/vapoursynth/plugins/${_plug}/README.md"
+  install -Dm644 "${_plug}/Copying" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
