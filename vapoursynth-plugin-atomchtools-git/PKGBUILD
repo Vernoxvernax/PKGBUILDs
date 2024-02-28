@@ -1,0 +1,36 @@
+# Maintainer: DepriSheep
+
+_plug=atomchtools
+pkgname=vapoursynth-plugin-${_plug}-git
+pkgver=0.9
+pkgrel=1
+pkgdesc="Atom's VS functions"
+license=('MIT')
+arch=('any')
+url='https://github.com/DJATOM/VapourSynth-atomchtools'
+depends=(
+  'python'
+  'vapoursynth-plugin-cooldegrain'
+  'vapoursynth-plugin-havsfunc'
+)
+optdepends=(
+  'vapoursynth-plugin-bm3dcuda: BM3DCUDA filter'
+)
+makedepends=('git' 'python-build' 'python-installer')
+source=(
+  "${_plug}"::"git+https://github.com/DJATOM/VapourSynth-atomchtools.git"
+)
+sha256sums=(
+  'SKIP'
+)
+
+package(){
+  cd "${_plug}"
+  _site="$(python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
+  install -Dm644 ${_plug}.py "${pkgdir}${_site}/${_plug}.py"
+  python -m compileall -q -f -d "${_site}" "${pkgdir}${_site}/${_plug}.py"
+  python -OO -m compileall -q -f -d "${_site}" "${pkgdir}${_site}/${_plug}.py"
+}
+
+# vim:set ts=2 sw=2 et:
+

@@ -1,0 +1,29 @@
+# Maintainer: DepriSheep
+
+_plug=cooldegrain
+pkgname=vapoursynth-plugin-${_plug}-git
+pkgver=1.0
+pkgrel=1
+pkgdesc="Degraining library"
+license=('MIT')
+arch=('any')
+url='https://github.com/MiraiAnime/vapoursynth-stuff'
+depends=('python')
+makedepends=('git' 'python-build' 'python-installer')
+source=(
+  "${_plug}"::git+"https://github.com/MiraiAnime/vapoursynth-stuff.git"
+)
+sha256sums=(
+  'SKIP'
+)
+
+package(){
+  cd "${_plug}"
+  _site="$(python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
+  install -Dm644 ${_plug}.py "${pkgdir}${_site}/${_lib}.py"
+  python -m compileall -q -f -d "${_site}" "${pkgdir}${_site}/${_lib}.py"
+  python -OO -m compileall -q -f -d "${_site}" "${pkgdir}${_site}/${_lib}.py"
+}
+
+# vim:set ts=2 sw=2 et:
+
