@@ -1,4 +1,4 @@
-# Maintainer: Vernox Vernax <vernoxvernax@gmail.com>
+# Maintainer: DepriSheep
 
 _base=gotify
 pkgname=python-${_base}
@@ -20,11 +20,6 @@ build(){
 }
 
 package(){
-  #_site="$(python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
-  #cp ../BlurryBatch.py .
-  #install -Dm644 BlurryBatch.py "${pkgdir}${_site}/${_lib}.py"
-  #python -m compileall -q -f -d "${_site}" "${pkgdir}${_site}/${_lib}.py"
-  #python -OO -m compileall -q -f -d "${_site}" "${pkgdir}${_site}/${_lib}.py"
   cd ${pkgname}
   python -m installer --destdir="$pkgdir" dist/*.whl
 }
