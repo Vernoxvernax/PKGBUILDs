@@ -1,0 +1,33 @@
+# Maintainer: Vernox Vernax <vernoxvernax@gmail.com>
+
+_base=gotify
+pkgname=python-${_base}
+pkgver=0.6.0
+pkgrel=1
+pkgdesc="Python library to access your gotify server"
+license=('MIT')
+arch=('any')
+url='https://github.com/d-k-bo/python-gotify'
+license=('MIT')
+depends=('python' 'python-flit-core' 'python-httpx')
+makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
+source=("git+${url}.git")
+b2sums=("SKIP")
+
+build(){
+  cd ${pkgname}
+  python -m build --wheel --no-isolation
+}
+
+package(){
+  #_site="$(python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
+  #cp ../BlurryBatch.py .
+  #install -Dm644 BlurryBatch.py "${pkgdir}${_site}/${_lib}.py"
+  #python -m compileall -q -f -d "${_site}" "${pkgdir}${_site}/${_lib}.py"
+  #python -OO -m compileall -q -f -d "${_site}" "${pkgdir}${_site}/${_lib}.py"
+  cd ${pkgname}
+  python -m installer --destdir="$pkgdir" dist/*.whl
+}
+
+# vim:set ts=2 sw=2 et:
+
