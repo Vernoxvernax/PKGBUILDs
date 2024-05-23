@@ -1,7 +1,7 @@
 # Maintainer: DepriSheep
 
 _plug=cooldegrain
-pkgname=vapoursynth-plugin-${_plug}-git
+pkgname=vapoursynth-plugin-${_plug}
 pkgver=1.0
 pkgrel=1
 pkgdesc="Degraining library"
@@ -11,18 +11,18 @@ url='https://github.com/MiraiAnime/vapoursynth-stuff'
 depends=('python')
 makedepends=('git' 'python-build' 'python-installer')
 source=(
-  "${_plug}"::git+"https://github.com/MiraiAnime/vapoursynth-stuff.git"
+  "https://github.com/MiraiAnime/vapoursynth-stuff/raw/a7454339b7b77908b1faec7547be54718904509a/cooldegrain.py"
 )
 sha256sums=(
   'SKIP'
 )
+provides=(${pkgname%-*})
 
 package(){
-  cd "${_plug}"
   _site="$(python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
-  install -Dm644 ${_plug}.py "${pkgdir}${_site}/${_lib}.py"
-  python -m compileall -q -f -d "${_site}" "${pkgdir}${_site}/${_lib}.py"
-  python -OO -m compileall -q -f -d "${_site}" "${pkgdir}${_site}/${_lib}.py"
+  install -Dm644 ${_plug}.py "${pkgdir}${_site}/${_plug}.py"
+  python -m compileall -q -f -d "${_site}" "${pkgdir}${_site}/${_plug}.py"
+  python -OO -m compileall -q -f -d "${_site}" "${pkgdir}${_site}/${_plug}.py"
 }
 
 # vim:set ts=2 sw=2 et:

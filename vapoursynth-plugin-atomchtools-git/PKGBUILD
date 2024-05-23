@@ -23,6 +23,7 @@ source=(
 sha256sums=(
   'SKIP'
 )
+provides=(${pkgname%-*})
 
 package(){
   cd "${_plug}"
